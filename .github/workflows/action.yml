@@ -1,0 +1,36 @@
+name: MyDeploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  Killall:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: touch private_key && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 600 private_key
+      - run: ssh -i private_key -o StrictHostKeyChecking=accept-new deployer@92.63.102.99
+      - run: ssh -i private_key deployer@92.63.102.99 'if pgrep python; then pkill python; fi'
+
+  Prepare:
+    runs-on: ubuntu-latest
+    needs: [Killall]
+    steps:
+      - uses: actions/checkout@v2
+      - run: touch private_key && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+      - run: chmod 600 private_key
+      - run: ssh -i private_key -o StrictHostKeyChecking=accept-new deployer@92.63.102.99
+      - run: ssh -i private_key deployer@92.63.102.99 'cd ~/backend-api; git pull;'
+      - run: ssh -i private_key deployer@92.63.102.99 'cd ~/backend-api; pip install -r requirements.txt'
+
+  Run:
+    runs-on: ubuntu-latest
+    needs: [Prepare]
+    steps:
+      - uses: actions/checkout@v2
+      - run: touch private_key && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+      - run: chmod 600 private_key
+      - run: ssh -i private_key -o StrictHostKeyChecking=accept-new deployer@92.63.102.99
+      - run: ssh -i private_key deployer@92.63.102.99 'cd ~/backend-api; python manage.py runserver 92.63.102.99 &'
