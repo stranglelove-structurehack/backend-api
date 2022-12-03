@@ -33,4 +33,4 @@ jobs:
       - run: touch private_key && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
       - run: chmod 600 private_key
       - run: ssh -i private_key -o StrictHostKeyChecking=accept-new deployer@92.63.102.99
-      - run: ssh -i private_key deployer@92.63.102.99 'cd ~/backend-api; python manage.py runserver 92.63.102.99 &'
+      - run: ssh -i private_key deployer@92.63.102.99 'cd ~/backend-api; python manage.py runserver 92.63.102.99:8000 &'
