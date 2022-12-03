@@ -10,7 +10,12 @@ class User(AbstractUser):
 	password = models.CharField("Пароль", max_length=255)
 	fio = models.CharField("ФИО", max_length=255)
 	phone = models.CharField("Номер телефона", max_length=12) # TODO: change type from str to PhoneNumber or smth idk.
-
+	
+	subscribers_counter = models.IntegerField("Количество подписчиков", default=0)
+	subscriptions_counter = models.IntegerField("Количество подписок", default=0)
+	
+	# TODO: Profile pics
+	
 	USERNAME_FIELD = 'username'
 
 	def __str__(self):
