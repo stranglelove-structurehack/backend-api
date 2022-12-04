@@ -20,3 +20,4 @@ class UserSerializer(serializers.ModelSerializer):
 class SubscribtionSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        

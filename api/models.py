@@ -26,8 +26,10 @@ class User(AbstractUser):
 			subs.append(u)
 		return subs
 	
+	@property
 	def _get_subscribers(self) -> list:
 		return self.__get_users_from_ids([int(a) for a in str(self.subscribers).split()])
-
+	
+	@property
 	def _get_subscription(self) -> list:
 		return self.__get_users_from_ids([int(a) for a in str(self.subscription).split()])

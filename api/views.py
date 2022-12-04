@@ -122,6 +122,29 @@ class SubscribeView(APIView):
 		logged_user.subscription += "{} ".format(request.data["id"])
 		catched_user.save()
 		logged_user.save()
-		
-		# serializer = serializers.UserSerializer(to_user)
+
 		return Response({"status": "ok", "message": "Subscribed"})
+
+class SubscribersListView(APIView):
+	
+	def get(self, request):
+		token = request.COOKIES.get("jwt")
+		
+		if not token:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		try:
+			payload = jwt.decode(token, "secret", algorithms=["HS256"])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		if not request.data.get("id"):
+			return Response(
+				{"id": "required"}
+			)
+		
+		user = User.objects.get(id=request.data["id"])
+		subscribers_list_ser = serializers.UserSerializer(user._get_subscribers, many=True)
+		serializer = serializers.UserSerializer(user)
+
+		return Response(subscribers_list_ser.data)
