@@ -33,3 +33,13 @@ class User(AbstractUser):
 	@property
 	def _get_subscription(self) -> list:
 		return self.__get_users_from_ids([int(a) for a in str(self.subscription).split()])
+
+
+class Material(models.Model):
+	url_to_photo = models.CharField("Фото материала", max_length=255)
+	url_to_open_3d_obj = models.CharField("Ссылка на 3d объект", max_length=255)
+	description = models.CharField("Описание материала", max_length=255)
+	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return f"{self.author}: {self.url_to_open_3d_obj}"
