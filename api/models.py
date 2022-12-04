@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import datetime
 
 class User(AbstractUser):
 	username = models.CharField("Короткая ссылка", max_length=255, unique=True)
@@ -44,3 +45,13 @@ class Material(models.Model):
 	
 	def __str__(self):
 		return f"{self.author}: {self.url_to_open_3d_obj}"
+
+
+class MaterialComment(models.Model):
+	material = models.ForeignKey(Material, on_delete=models.CASCADE)
+	comment_text = models.CharField("Текст комментария", max_length=200)
+	comment_author = models.ForeignKey(User, on_delete=models.CASCADE)
+	pub_date = models.DateTimeField("Дата создания комментария", default=datetime.datetime.today)
+	
+	def __str__(self):
+		return f"{self.comment_author.username}: {self.post.post_title} - {self.comment_text}"

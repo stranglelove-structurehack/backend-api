@@ -271,3 +271,26 @@ class SetLikeMaterialView(APIView):
 		m.save()
 		
 		return Response({"status": "ok", "message": "liked"})
+
+
+class MaterialCommentList(APIView):
+	def get(self, request):
+		token = request.COOKIES.get("jwt")
+		
+		if not token:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		try:
+			payload = jwt.decode(token, "secret", algorithms=["HS256"])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		if not request.data.get("material_id"):
+			return Response(
+				{"material_id": "required"}
+			)
+		
+		m = Material.objects.get(id=request.data['material_id'])
+		comments = m.materialcomment_set.order_by('-id')
+		serializer = serializers.MaterialCommentSerializer(comments, many=True)
+		return Response(serializer.data)

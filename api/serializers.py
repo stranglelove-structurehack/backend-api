@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import User, Material
+from api.models import User, Material, MaterialComment
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +21,17 @@ class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
         fields = ['url_to_photo', 'url_to_open_3d_obj', 'description', 'likes_count', 'author']
+
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+
+
+class MaterialCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MaterialComment
+        fields = ["material", "comment_text", "comment_author", "pub_date"]
 
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)
