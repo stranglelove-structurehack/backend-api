@@ -197,3 +197,25 @@ class GetFromUserMaterialsView(APIView):
 		
 		serializer = serializers.MaterialSerializer(user_materials, many=True)
 		return Response(serializer.data)
+
+
+class CreateMaterialView(APIView):
+	def post(self, request):
+		
+		token = request.COOKIES.get("jwt")
+		
+		if not token:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		try:
+			payload = jwt.decode(token, "secret", algorithms=["HS256"])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		request.data._mutable = True
+		request.data.setdefault("author", payload["id"])
+		
+		serializer = serializers.MaterialSerializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
