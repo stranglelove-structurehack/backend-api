@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
-from api.models import User
+from api.models import User, Material
 
 
 def welcome(request):
@@ -243,4 +243,31 @@ class LentaSubscriptionView(APIView):
 				serializers.MaterialSerializer(user_materials, many=True).data
 			)
 		
+		if not subscription_list_with_user_objects:
+			return Response([])
+		
 		return Response(subscription_list_with_user_objects[0])
+
+
+class SetLikeMaterialView(APIView):
+	def post(self, request):
+		token = request.COOKIES.get("jwt")
+		
+		if not token:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		try:
+			payload = jwt.decode(token, "secret", algorithms=["HS256"])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		if not request.data.get("material_id"):
+			return Response(
+				{"material_id": "required"}
+			)
+		
+		m = Material.objects.get(id=request.data['material_id'])
+		m.likes_count += 1
+		m.save()
+		
+		return Response({"status": "ok", "message": "liked"})

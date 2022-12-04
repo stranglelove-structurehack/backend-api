@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
-        fields = ['url_to_photo', 'url_to_open_3d_obj', 'description', 'author']
+        fields = ['url_to_photo', 'url_to_open_3d_obj', 'description', 'likes_count', 'author']
 
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)

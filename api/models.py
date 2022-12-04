@@ -39,6 +39,7 @@ class Material(models.Model):
 	url_to_photo = models.CharField("Фото материала", max_length=255)
 	url_to_open_3d_obj = models.CharField("Ссылка на 3d объект", max_length=255)
 	description = models.CharField("Описание материала", max_length=255)
+	likes_count = models.IntegerField("Количество лайков", default=0)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	
 	def __str__(self):

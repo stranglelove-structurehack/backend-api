@@ -20,4 +20,6 @@ urlpatterns = [
 	path("materials/create", views.CreateMaterialView.as_view()),
 	
 	path('lenta/subscription', views.LentaSubscriptionView.as_view()),
+	
+	path('likes/set', views.SetLikeMaterialView.as_view()),
 ]
