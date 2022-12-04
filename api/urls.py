@@ -14,4 +14,5 @@ urlpatterns = [
 	path('user/get', views.UserGetView.as_view()),
 	path('user/subscribe_to', views.SubscribeView.as_view()),
 	path('user/subscribers_list', views.SubscribersListView.as_view()),
+	path('user/subscription_list', views.SubscriptionListView.as_view()),
 ]
