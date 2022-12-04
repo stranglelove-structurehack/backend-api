@@ -109,10 +109,10 @@ class SubscribeView(APIView):
 			)
 		
 		catched_user = User.objects.get(id=request.data["id"])
-		catched_user_podpischiki = catched_user._get_subscribers()
+		catched_user_podpischiki = catched_user._get_subscribers
 		
 		logged_user = User.objects.get(id=payload['id'])
-		logged_user_podpiski = logged_user._get_subscription()
+		logged_user_podpiski = logged_user._get_subscription
 		
 		
 		if catched_user in logged_user_podpiski or logged_user in catched_user_podpischiki:
@@ -219,3 +219,28 @@ class CreateMaterialView(APIView):
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response(serializer.data)
+
+
+class LentaSubscriptionView(APIView):
+	
+	def get(self, request):
+		token = request.COOKIES.get("jwt")
+		
+		if not token:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		try:
+			payload = jwt.decode(token, "secret", algorithms=["HS256"])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed("Unauthenticated!")
+		
+		logged_user = User.objects.get(id=payload["id"])
+		subscription_list_with_user_objects = []
+		for u in logged_user._get_subscription:
+			user_materials = u.material_set.order_by('-id')
+			
+			subscription_list_with_user_objects.append(
+				serializers.MaterialSerializer(user_materials, many=True).data
+			)
+		
+		return Response(subscription_list_with_user_objects[0])
