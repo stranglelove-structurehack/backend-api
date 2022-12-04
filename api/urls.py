@@ -19,6 +19,7 @@ urlpatterns = [
 	path("materials/get_from_user", views.GetFromUserMaterialsView.as_view()),
 	path("materials/create", views.CreateMaterialView.as_view()),
 	path("materials/comment_list", views.MaterialCommentList.as_view()),
+	path("materials/comment_leave", views.LeaveMaterialCommentView.as_view()),
 	
 	path('lenta/subscription', views.LentaSubscriptionView.as_view()),
 	path('likes/set', views.SetLikeMaterialView.as_view()),
