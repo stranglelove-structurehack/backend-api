@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 from api.models import User, Material
+from .ml import get_info_from_user
 
 
 def welcome(request):
@@ -319,3 +320,17 @@ class LeaveMaterialCommentView(APIView):
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response(serializer.data)
+
+
+class MLGetInfoFromUser(APIView):
+	def post(self, request):
+		serializer = serializers.MLGetInfoFromUser(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+
+		result = get_info_from_user(
+			serializer.data["user_gtin"],
+			serializer.data["user_region_code"],
+			serializer.data["user_n_classes"],
+		)
+		return Response({"result": result})

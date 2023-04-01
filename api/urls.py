@@ -23,4 +23,6 @@ urlpatterns = [
 	
 	path('lenta/subscription', views.LentaSubscriptionView.as_view()),
 	path('likes/set', views.SetLikeMaterialView.as_view()),
+    
+	path('ml/get_info_from_user', views.MLGetInfoFromUser.as_view()),
 ]

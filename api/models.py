@@ -55,3 +55,12 @@ class MaterialComment(models.Model):
 	
 	def __str__(self):
 		return f"{self.comment_author.username}: {self.post.post_title} - {self.comment_text}"
+
+
+class MLInfoFromUser(models.Model):
+	user_gtin = models.CharField('user_gtin', max_length=200)
+	user_region_code = models.IntegerField('user_region_code')
+	user_n_classes = models.IntegerField('user_n_classes')
+
+	def __str__(self):
+		return f"{self.user_gtin} - {self.user_region_code} - {self.user_n_classes}"

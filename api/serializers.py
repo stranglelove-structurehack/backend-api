@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import User, Material, MaterialComment
+from api.models import User, Material, MaterialComment, MLInfoFromUser
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,3 +37,9 @@ class MaterialCommentSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
+
+
+class MLGetInfoFromUser(serializers.ModelSerializer):
+    class Meta:
+        model = MLInfoFromUser
+        fields = ["user_gtin", "user_region_code", "user_n_classes"]
