@@ -25,4 +25,5 @@ urlpatterns = [
 	path('likes/set', views.SetLikeMaterialView.as_view()),
     
 	path('ml/get_info_from_user', views.MLGetInfoFromUser.as_view()),
+	path('ml/get_stat_picture', views.MLGetStatPicture.as_view()),
 ]

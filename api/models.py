@@ -64,3 +64,11 @@ class MLInfoFromUser(models.Model):
 
 	def __str__(self):
 		return f"{self.user_gtin} - {self.user_region_code} - {self.user_n_classes}"
+
+
+class MLStatPicture(models.Model):
+	user_number_of_cluster = models.IntegerField('user_number_of_cluster')
+	user_product_name = models.CharField('user_product_name', max_length=200)
+
+	def __str__(self):
+		return f"{self.user_number_of_cluster} - {self.user_product_name}"

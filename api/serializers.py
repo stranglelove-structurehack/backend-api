@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from api.models import User, Material, MaterialComment, MLInfoFromUser
+from api.models import User, Material, MaterialComment, MLInfoFromUser, MLStatPicture
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
 
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,3 +45,9 @@ class MLGetInfoFromUser(serializers.ModelSerializer):
     class Meta:
         model = MLInfoFromUser
         fields = ["user_gtin", "user_region_code", "user_n_classes"]
+
+
+class MLGetStatPictureFromUser(serializers.ModelSerializer):
+    class Meta:
+        model = MLStatPicture
+        fields = ["user_number_of_cluster", "user_product_name"]

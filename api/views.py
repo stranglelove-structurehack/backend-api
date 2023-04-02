@@ -8,8 +8,9 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 from api.models import User, Material
-from .ml import get_info_from_user
+from .ml import get_info_from_user, get_stat_picture
 
+GLOBAL_ADRESSES = None
 
 def welcome(request):
 	return HttpResponse("<h1>Welcome</h1>")
@@ -327,10 +328,36 @@ class MLGetInfoFromUser(APIView):
 		serializer = serializers.MLGetInfoFromUser(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
+		global GLOBAL_ADRESSES
 
-		result = get_info_from_user(
+		result, GLOBAL_ADRESSES = get_info_from_user(
 			serializer.data["user_gtin"],
 			serializer.data["user_region_code"],
 			serializer.data["user_n_classes"],
 		)
+
+		print("\n\n\n\n\n")
+		print("mlgetinfo", GLOBAL_ADRESSES)
+		print("\n\n\n\n\n")
+
 		return Response({"result": result})
+
+
+class MLGetStatPicture(APIView):
+	def post(self, request):
+		serializer = serializers.MLGetStatPictureFromUser(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		global GLOBAL_ADRESSES
+
+		print("\n\n\n\n\n")
+		print(GLOBAL_ADRESSES)
+		print("\n\n\n\n\n")
+
+		result = get_stat_picture(
+			serializer.data["user_number_of_cluster"],
+			serializer.data["user_product_name"],
+			GLOBAL_ADRESSES,
+		)
+
+		return Response({"result": True})
